@@ -1,0 +1,225 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root123456
+      MYSQL_DATABASE: cloud_db
+      TZ: Asia/Shanghai
+    volumes:
+      - ./mysql/init:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+    networks:
+      - cloud-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - cloud-net
+
+  # ===================== NACOS 已简化 =====================
+  # 只挂载你有的：nacos-config（你的业务配置）
+  # 不需要你准备 application.properties
+  nacos:
+    image: nacos/nacos-server:v2.3.0-slim
+    container_name: nacos
+    restart: always
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    environment:
+      MODE: standalone
+      TZ: Asia/Shanghai
+    volumes:
+      - ./nacos-config:/home/nacos/data/config-data  # 你的配置 ✅
+    depends_on:
+      - mysql
+    networks:
+      - cloud-net
+
+  sentinel:
+    image: bladex/sentinel-dashboard:1.8.6
+    container_name: sentinel
+    restart: always
+    ports:
+      - "8858:8858"
+    environment:
+      NACOS_SERVER_ADDR: nacos:8848
+      TZ: Asia/Shanghai
+    networks:
+      - cloud-net
+
+  # ===================== NGINX VUE 80端口 =====================
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/dist:/usr/share/nginx/html
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf  # 新增挂载配置
+    networks:
+      - cloud-net
+
+  # ===================== 微服务 =====================
+  gateway:
+    image: openjdk:17-jdk-slim
+    container_name: service-gateway
+    restart: always
+    ports:
+      - "7000:7000"
+    volumes:
+      - ./service/service-gateway.jar:/app.jar
+    command: java -jar /app.jar
+    depends_on:
+      - nacos
+      - mysql
+      - redis
+    networks:
+      - cloud-net
+
+  service-authenticate:
+    image: openjdk:17-jdk-slim
+    container_name: service-authenticate
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./service/service-authenticate.jar:/app.jar
+    command: java -jar /app.jar
+    depends_on:
+      - nacos
+    networks:
+      - cloud-net
+
+  service-demo:
+    image: openjdk:17-jdk-slim
+    container_name: service-demo
+    restart: always
+    ports:
+      - "8100:8100"
+    volumes:
+      - ./service/service-demo.jar:/app.jar
+    command: java -jar /app.jar
+    depends_on:
+      - nacos
+    networks:
+      - cloud-net
+
+  service-user:
+    image: openjdk:17-jdk-slim
+    container_name: service-user
+    restart: always
+    ports:
+      - "8200:8200"
+    volumes:
+      - ./service/service-user.jar:/app.jar
+    command: java -jar /app.jar
+    depends_on:
+      - nacos
+    networks:
+      - cloud-net
+
+  service-file:
+    image: openjdk:17-jdk-slim
+    container_name: service-file
+    restart: always
+    ports:
+      - "8300:8300"
+    volumes:
+      - ./service/service-file.jar:/app.jar
+    command: java -jar /app.jar
+    depends_on:
+      - nacos
+    networks:
+      - cloud-net
+
+  service-hotel:
+    image: openjdk:17-jdk-slim
+    container_name: service-hotel
+    restart: always
+    ports:
+      - "8400:8400"
+    volumes:
+      - ./service/service-hotel.jar:/app.jar
+    command: java -jar /app.jar
+    depends_on:
+      - nacos
+    networks:
+      - cloud-net
+
+  service-scenic:
+    image: openjdk:17-jdk-slim
+    container_name: service-scenic
+    restart: always
+    ports:
+      - "8500:8500"
+    volumes:
+      - ./service/service-scenic.jar:/app.jar
+    command: java -jar /app.jar
+    depends_on:
+      - nacos
+    networks:
+      - cloud-net
+
+  service-guide:
+    image: openjdk:17-jdk-slim
+    container_name: service-guide
+    restart: always
+    ports:
+      - "8600:8600"
+    volumes:
+      - ./service/service-guide.jar:/app.jar
+    command: java -jar /app.jar
+    depends_on:
+      - nacos
+    networks:
+      - cloud-net
+
+  service-comment:
+    image: openjdk:17-jdk-slim
+    container_name: service-comment
+    restart: always
+    ports:
+      - "8700:8700"
+    volumes:
+      - ./service/service-comment.jar:/app.jar
+    command: java -jar /app.jar
+    depends_on:
+      - nacos
+    networks:
+      - cloud-net
+
+  service-order:
+    image: openjdk:17-jdk-slim
+    container_name: service-order
+    restart: always
+    ports:
+      - "8800:8800"
+    volumes:
+      - ./service/service-order.jar:/app.jar
+    command: java -jar /app.jar
+    depends_on:
+      - nacos
+    networks:
+      - cloud-net
+
+networks:
+  cloud-net:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:

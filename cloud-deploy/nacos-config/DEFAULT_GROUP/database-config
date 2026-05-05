@@ -1,0 +1,7 @@
+spring.datasource.druid.url=jdbc:mysql://localhost:3306/travel?characterEncoding=utf-8&serverTimezone=UTC
+spring.datasource.druid.username=root
+spring.datasource.druid.password=20040619Lmy
+spring.datasource.druid.driver-class-name=com.mysql.cj.jdbc.Driver
+
+mybatis-plus.mapper-locations=classpath*:/mapper/**/*.xml
+mybatis-plus.configuration.map-underscore-to-camel-case=true

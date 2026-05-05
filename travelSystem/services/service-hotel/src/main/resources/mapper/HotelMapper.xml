@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.mapper.HotelMapper">
+
+    <!-- 主结果映射：Hotel -->
+    <resultMap id="HotelResultMap" type="org.example.domain.hotel.Hotel">
+        <id column="h_id" property="id"/>
+        <result column="h_name" property="name"/>
+        <result column="h_address" property="address"/>
+        <result column="h_area_code" property="areaCode"/>
+        <result column="h_longitude" property="longitude"/>
+        <result column="h_latitude" property="latitude"/>
+        <result column="h_desc" property="hotelDesc"/>
+        <result column="h_feature_json" property="featureJson"/>
+        <result column="h_facility_json" property="facilityJson"/>
+        <result column="h_service_json" property="serviceJson"/>
+        <result column="h_rating" property="rating"/>
+        <result column="h_check_in_time" property="checkInTime"/>
+        <result column="h_check_out_time" property="checkOutTime"/>
+        <result column="h_star_level" property="starLevel"/>
+        <result column="h_cover_img" property="coverImg"/>
+
+        <!-- 酒店图片（添加 column 外键） -->
+        <collection property="hotelImgList" ofType="org.example.domain.SystemFile" column="h_id">
+            <id column="hi_file_id" property="id"/>
+            <result column="hi_path" property="path"/>
+        </collection>
+
+        <!-- 房间集合（添加 column 外键） -->
+        <collection property="hotelRoomList" ofType="org.example.domain.hotel.HotelRoom" column="h_id">
+            <id column="r_id" property="id"/>
+            <result column="r_as_hotel" property="asHotel"/>
+            <result column="r_name" property="name"/>
+            <result column="r_desc" property="roomDesc"/>
+            <result column="r_feature_json" property="featureJson"/>
+            <result column="r_tag_json" property="tagJson"/>
+            <result column="r_bed_count" property="bedCount"/>
+            <result column="r_bed_size" property="bedSize"/>
+            <result column="r_max_people" property="maxPeople"/>
+            <result column="r_total_room" property="totalRoom"/>
+
+            <!-- 房间图片（添加 column 外键 + 修复别名） -->
+            <collection property="roomImgList" ofType="org.example.domain.SystemFile" column="r_id">
+                <id column="ri_file_id" property="id"/>
+                <result column="ri_path" property="path"/>
+            </collection>
+
+            <!-- 房型价格（添加 column 外键） -->
+            <collection property="roomTypePriceList" ofType="org.example.domain.hotel.RoomTypePrice" column="r_id">
+                <id column="rtp_id" property="id"/>
+                <result column="rtp_as_room" property="asRoom"/>
+                <result column="rtp_summary_json" property="summaryJson"/>
+                <result column="rtp_price" property="price"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="selectHotelById" resultMap="HotelResultMap">
+        SELECT
+            h.id                  AS h_id,
+            h.name                AS h_name,
+            h.address             AS h_address,
+            h.area_code           AS h_area_code,
+            h.longitude           AS h_longitude,
+            h.latitude            AS h_latitude,
+            h.hotel_desc          AS h_desc,
+            h.feature_json        AS h_feature_json,
+            h.facility_json       AS h_facility_json,
+            h.service_json        AS h_service_json,
+            h.rating              AS h_rating,
+            h.check_in_time       AS h_check_in_time,
+            h.check_out_time      AS h_check_out_time,
+            h.star_level          AS h_star_level,
+            h.cover_img           AS h_cover_img,
+
+            -- 酒店图片（正确）
+            hi.file_id            AS hi_file_id,
+            shi.path              AS hi_path,
+
+            -- 房间
+            r.id                  AS r_id,
+            r.as_hotel            AS r_as_hotel,
+            r.name                AS r_name,
+            r.room_desc           AS r_desc,
+            r.feature_json        AS r_feature_json,
+            r.tag_json            AS r_tag_json,
+            r.bed_count           AS r_bed_count,
+            r.bed_size            AS r_bed_size,
+            r.max_people          AS r_max_people,
+            r.total_room          AS r_total_room,
+
+            -- 房间图片（修复：必须取 system_file 的 path）
+            ri.file_id            AS ri_file_id,
+            sri.path              AS ri_path,
+
+            -- 房型价格
+            rtp.id                AS rtp_id,
+            rtp.as_room           AS rtp_as_room,
+            rtp.summary_json      AS rtp_summary_json,
+            rtp.price             AS rtp_price
+
+        FROM hotel h
+                 LEFT JOIN hotel_img hi     ON h.id = hi.as_id AND hi.is_delete = 0
+                 LEFT JOIN system_file shi  ON hi.file_id = shi.id AND shi.is_delete = 0
+                 LEFT JOIN hotel_room r     ON h.id = r.as_hotel AND r.is_delete = 0
+                 LEFT JOIN room_img ri      ON r.id = ri.as_id AND ri.is_delete = 0
+                 LEFT JOIN system_file sri  ON ri.file_id = sri.id AND sri.is_delete = 0
+                 LEFT JOIN room_type_price rtp ON r.id = rtp.as_room AND rtp.is_delete = 0
+
+        WHERE h.id = #{id}
+          AND h.is_delete = 0
+    </select>
+</mapper>

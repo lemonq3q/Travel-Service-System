@@ -1,0 +1,232 @@
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+div {
+    box-sizing: border-box;
+}
+
+.card {
+  padding: 20px;     /* 内边距，让内容不贴边 */
+  box-sizing: border-box; /* 盒模型，避免内边距撑大卡片 */
+  
+  border-radius: 6px; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+
+  border: 1px solid #f0f0f0; /* 轻微边框增强层次感 */
+  transition: box-shadow 0.3s ease; /* 阴影过渡动画，hover时更丝滑 */
+  background-color: #fff;
+}
+
+
+/* 去除焦点边框样式 */
+*:focus,
+*:focus-visible,
+*:focus-within {
+  outline: none !important;
+}
+
+.no_select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.router-link-active {
+  text-decoration: none
+}
+
+a {
+  text-decoration: none
+} 
+
+
+.el-upload-list__item div{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.no_wrap {
+  white-space: nowrap;
+}
+/* .el-message {
+  font-size: 14px !important;
+} */
+
+/* 覆盖浏览器自动填充的默认样式 */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  /* 关键：使用内阴影覆盖蓝色背景 */
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  /* 将文字颜色设置为你需要的颜色，这里设为黑色 */
+  -webkit-text-fill-color: #000000 !important;
+  /* 过渡动画，避免闪烁 */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.order-module {
+  width: 100%;
+  background: #f7f8fa;
+}
+
+.order-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px 16px 30px;
+}
+
+.order-topbar {
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.order-header {
+  padding: 10px 0 16px;
+  text-align: left;
+}
+
+.order-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.order-sub {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.order-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.order-grid.two {
+  grid-template-columns: 2fr 1fr;
+}
+
+.order-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.order-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 900;
+  color: #0f172a;
+  text-align: left;
+}
+
+.order-kv {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.order-kv .k {
+  font-size: 12px;
+  color: #64748b;
+  text-align: left;
+}
+
+.order-kv .v {
+  font-size: 14px;
+  color: #111827;
+  text-align: left;
+}
+
+.order-money {
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.order-divider {
+  height: 1px;
+  background: #eef2f7;
+  margin: 14px 0;
+}
+
+.order-price-row {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #111827;
+}
+
+.order-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.order-total .label {
+  font-size: 14px;
+  color: #111827;
+}
+
+.order-total .value {
+  font-size: 22px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.order-submit {
+  width: 100%;
+  margin-top: 14px;
+}
+
+.order-tip {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #64748b;
+  text-align: left;
+}
+
+.order-remain {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.order-remain .remain-btn {
+  margin-left: auto;
+}
+
+@media (max-width: 960px) {
+  .order-grid.two {
+    grid-template-columns: 1fr;
+  }
+}

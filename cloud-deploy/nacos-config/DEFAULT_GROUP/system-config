@@ -1,0 +1,4 @@
+system.authenticate.token=6ac35db1f01e
+
+spring.cloud.sentinel.transport.dashboard=localhost:8080
+spring.cloud.sentinel.eager=true

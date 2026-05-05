@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.mapper.UserMapper">
+
+    <select id="selectPersonalUser" resultType="org.example.domain.user.User">
+        SELECT
+            u.*,
+            r.name AS roleName
+        FROM user u
+        LEFT JOIN user_role ur ON ur.user_id = u.id AND ur.is_delete = 0
+        LEFT JOIN role r ON r.id = ur.role_id AND r.is_delete = 0
+        WHERE u.id = #{id}
+          AND u.is_delete = 0
+        LIMIT 1
+    </select>
+
+    <select id="selectSystemUser" resultType="org.example.domain.user.User">
+        SELECT
+            u.*,
+            r.name AS roleName
+        FROM user u
+        LEFT JOIN user_role ur ON ur.user_id = u.id AND ur.is_delete = 0
+        LEFT JOIN role r ON r.id = ur.role_id AND r.is_delete = 0
+        <where>
+            u.is_delete = 0
+            <if test="dto != null">
+                <if test="dto.blurParam != null and dto.blurParam != ''">
+                    AND (
+                        u.name LIKE CONCAT('%', #{dto.blurParam}, '%')
+                        OR u.username LIKE CONCAT('%', #{dto.blurParam}, '%')
+                    )
+                </if>
+                <if test="dto.roleId != null">
+                    AND ur.role_id = #{dto.roleId}
+                </if>
+                <if test="dto.status != null">
+                    <choose>
+                        <when test="dto.status == 1">
+                            AND u.is_delete = 0
+                        </when>
+                        <otherwise>
+                            AND u.is_delete = 1
+                        </otherwise>
+                    </choose>
+                </if>
+            </if>
+        </where>
+        ORDER BY u.create_time DESC
+    </select>
+
+    <select id="selectUserById" resultType="org.example.domain.user.User">
+        SELECT
+            u.*,
+            ur.role_id AS roleId,
+            r.name AS roleName
+        FROM user u
+        LEFT JOIN user_role ur ON ur.user_id = u.id AND ur.is_delete = 0
+        LEFT JOIN role r ON r.id = ur.role_id AND r.is_delete = 0
+        WHERE u.id = #{id}
+        LIMIT 1
+    </select>
+
+</mapper>
+

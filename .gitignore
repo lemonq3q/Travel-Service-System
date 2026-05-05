@@ -1,0 +1,20 @@
+/*.txt
+
+*.jar
+
+# Java 项目自动生成的文件
+target/
+build/
+.gradle/
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+logs/

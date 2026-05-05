@@ -1,0 +1,98 @@
+// src/store/index.js
+import { createStore } from 'vuex';
+import { handlePermsToMenu } from '@/utils/authenticate';
+
+const helloModule = {
+  namespaced: true,
+  state() {
+    return {
+      count: 0,
+      user: { name: '访客' }
+    }
+  },
+  getters: {
+    doubleCount(state) {
+      return state.count * 2
+    },
+    userName(state) {
+      return state.user.name
+    }
+  },
+  mutations: {
+    increment(state) {
+      state.count++
+    },
+    setUser(state, payload) {
+      state.user = payload
+    }
+  },
+  actions: {
+    async incrementAsync({ commit }, delay) {
+      await new Promise(resolve => setTimeout(resolve, delay))
+      commit('increment')
+    },
+    async fetchUser({ commit }) {
+      // 模拟 API 请求
+      const mockUser = { name: '张三' }
+      commit('setUser', mockUser)
+    }
+  }
+}
+
+const loginModule = {
+  namespaced: true,
+  state() {
+    return {
+      user: {
+        id: null,
+        username: null,
+        name: null,
+        perms: null
+      },
+      token: null,
+      menu: {
+        firstMenu: ["upstream-downstream"],
+        secondMenu: ["upstream", "downstream"]
+      }
+    }
+  },
+
+  getters: {
+
+  },
+
+  mutations: {
+    setToken(state, token){
+      state.token = token;
+    },
+    setUser(state, user){
+      state.user = user;
+      state.menu = handlePermsToMenu(user.perms);
+    },
+    clear(state){
+      state.user = {
+        id: null,
+        username: null,
+        name: null,
+        perms: null
+      };
+      state.token = null;
+      state.menu = {
+        firstMenu: [],
+        secondMenu: []
+      };
+    }
+  },
+  actions: {
+
+  }
+};
+
+const store = createStore({
+  modules: {
+    hello: helloModule,
+    login: loginModule
+  }
+});
+
+export default store;

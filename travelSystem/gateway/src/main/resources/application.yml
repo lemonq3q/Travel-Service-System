@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: gateway
+
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+    gateway:
+      routes:
+        - id: auth-route
+          uri: lb://service-authenticate
+          predicates:
+            - Path=/auth/**
+
+        - id: demo-route
+          uri: lb://service-demo
+          predicates:
+            - Path=/demo/**
+
+        - id: hotel-route
+          uri: lb://service-hotel
+          predicates:
+            - Path=/hotel/**
+
+        - id: file-route
+          uri: lb://service-file
+          predicates:
+            - Path=/file/**
+
+        - id: scenic-route
+          uri: lb://service-scenic
+          predicates:
+              - Path=/scenic/**
+
+        - id: comment-route
+          uri: lb://service-comment
+          predicates:
+              - Path=/comment/**
+
+        - id: guide-route
+          uri: lb://service-guide
+          predicates:
+              - Path=/guide/**
+
+        - id: order-route
+          uri: lb://service-order
+          predicates:
+              - Path=/order/**
+
+        - id: user-route
+          uri: lb://service-user
+          predicates:
+              - Path=/user/**
+
+        - id: role-route
+          uri: lb://service-user
+          predicates:
+              - Path=/role/**
+server:
+  port: 7000
