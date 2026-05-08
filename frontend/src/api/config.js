@@ -12,8 +12,8 @@ const notInterceptUrls = [
   '/auth/forget'
 ];
 
-// axios.defaults.baseURL = 'http://localhost:80';
-axios.defaults.baseURL = 'http://47.104.194.25:7000';
+axios.defaults.baseURL = 'http://localhost:7000';
+// axios.defaults.baseURL = 'http://47.104.194.25:7000';
 // axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use(function (config) {
